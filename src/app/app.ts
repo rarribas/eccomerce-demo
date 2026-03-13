@@ -10,4 +10,5 @@ import { Nav } from "./core/layout/nav/nav";
 })
 export class App {
   protected readonly title = signal('ecommerce-demo');
+
 }

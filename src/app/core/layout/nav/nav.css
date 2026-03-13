@@ -1,0 +1,40 @@
+nav {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem;
+  background-color: var(--purple-100);
+  align-items: center;
+  border-bottom: 1px solid var(--purple-200);
+}
+
+nav p a {
+  text-decoration: none;
+  color: var(--color-primary);
+  font-weight: bold;
+  padding-right: 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 1.5rem;
+}
+
+nav ul {
+  list-style: none;
+  display: flex;
+  gap: 1rem;
+}
+
+nav ul li {
+  padding: 0 0.5rem;
+  border-radius: 0.25rem;
+}
+
+nav ul li a {
+  text-decoration: none;
+  color: var(--color-primary);
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+} 
+
+nav ul li a:hover {
+  color: var(--purple-800);
+  text-decoration: underline;
+}

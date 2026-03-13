@@ -1,0 +1,5 @@
+<ul id="products">
+  @for (product of products; track product.id) {
+    <li><app-card [title]="product.title"></app-card></li>
+  }
+</ul>
