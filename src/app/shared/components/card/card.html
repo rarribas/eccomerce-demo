@@ -1,7 +1,9 @@
 <div class="card">
-  <img [src]="imageUrl" alt="{{title}}" class="card-image"/>
+  <a routerLink="/products/{{id}}">
+    <img [src]="imageUrl" alt="{{title}}" class="card-image"/>
+  </a>
   <div class="card-body">
-    <h4><a href="#">{{title}}</a></h4>
+    <h4><a routerLink="/products/{{id}}">{{title}}</a></h4>
     <p>€ {{price.toFixed(2)}}</p>
     <p class="desc">{{miniDescription}}</p>
   </div>
