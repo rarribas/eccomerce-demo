@@ -1,0 +1,9 @@
+article{
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+article h1{
+  margin-bottom: 1rem;
+}
