@@ -2,9 +2,10 @@ nav {
   display: flex;
   gap: 1rem;
   padding: 1rem;
-  background-color: var(--purple-100);
+  background-color: var(--purple-200);
   align-items: center;
-  border-bottom: 1px solid var(--purple-200);
+  border-bottom: 1px solid var(--purple-400);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 nav p a {
