@@ -1,10 +1,10 @@
 <div class="card">
-  <a routerLink="/products/{{id}}">
-    <img [src]="imageUrl" alt="{{title}}" class="card-image"/>
+  <a [routerLink]="productUrl()">
+    <img [src]="imageUrl()" alt="{{title()}}" class="card-image"/>
   </a>
   <div class="card-body">
-    <h4><a routerLink="/products/{{id}}">{{title}}</a></h4>
-    <p>€ {{price.toFixed(2)}}</p>
-    <p class="desc">{{miniDescription}}</p>
+    <h4><a [routerLink]="productUrl()">{{title()}}</a></h4>
+    <p>€ {{price().toFixed(2)}}</p>
+    <p class="desc">{{miniDescription()}}</p>
   </div>
 </div>

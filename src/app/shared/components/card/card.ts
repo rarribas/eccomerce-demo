@@ -1,4 +1,4 @@
-import { Component, input, Input } from '@angular/core';
+import { Component, input, computed } from '@angular/core';
 import { required } from '@angular/forms/signals';
 import { RouterLink } from "@angular/router";
 
@@ -9,9 +9,11 @@ import { RouterLink } from "@angular/router";
   styleUrl: './card.css',
 })
 export class Card {
-  @Input({required: true}) id: string = '';
-  @Input({required: true}) title: string = '';
-  @Input({required: true}) miniDescription: string = '';
-  @Input({required: true}) price: number = 0;
-  @Input({required: true}) imageUrl: string = '';
+  id = input.required<string>();
+  title = input.required<string>();
+  miniDescription = input.required<string>();
+  price = input.required<number>();
+  imageUrl = input.required<string>();  
+
+  productUrl = computed(() => `/products/${this.id()}`);  
 }
