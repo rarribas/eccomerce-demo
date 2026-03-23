@@ -1,5 +1,13 @@
-<ul id="products">
-  @for (product of products; track product.id) {
-    <li><app-card [id]="product.id" [title]="product.title" [miniDescription]="product.miniDescription" [price]="product.price" [imageUrl]="product.imageUrl"></app-card></li>
-  }
-</ul>
+<header>
+  <app-search-input (search)="onSearch($event)" placeholder="Search for products ..."/>
+</header>
+
+@if(products.length > 0){
+  <ul id="products">
+    @for (product of products; track product.id) {
+      <li><app-card [id]="product.id" [title]="product.title" [miniDescription]="product.miniDescription" [price]="product.price" [imageUrl]="product.imageUrl"></app-card></li>
+    }
+  </ul>
+} @else {
+  <h4>No products found.</h4>
+}
