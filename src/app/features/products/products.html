@@ -1,5 +1,6 @@
 <header>
   <app-search-input (search)="onSearch($event)" placeholder="Search for products ..."/>
+  <app-select [options]="categories" (optionSelected)="onCategorySelected($event)"/>
 </header>
 
 @if(products.length > 0){
