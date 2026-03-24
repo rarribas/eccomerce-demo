@@ -1,6 +1,6 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import {type CategoryId} from "../../../../data/products";
+import { CategoryId } from '../../../features/products/products.model';
 @Component({
   selector: 'app-select',
   imports: [FormsModule],
@@ -9,6 +9,7 @@ import {type CategoryId} from "../../../../data/products";
 })
 export class Select {
   @Output() optionSelected = new EventEmitter<CategoryId>();
+  @Input({required: true}) optionType: string = '';
   @Input({required: true}) options: { id: string; label: string }[] = [];
   selectedOptionId: CategoryId | '' = '';
 

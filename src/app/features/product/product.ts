@@ -1,6 +1,6 @@
 import { Component, input, inject, computed } from '@angular/core';
 import { Router } from '@angular/router';
-import { findProductById } from '../../helpers/products';
+import { ProductService } from '../products/products.service';
 @Component({
   selector: 'app-product',
   imports: [],
@@ -11,9 +11,10 @@ export class Product {
   id = input.required<string>();
 
   private router = inject(Router);
-
+  private productService = inject(ProductService);
+  
   product = computed(() => {
-    return findProductById(this.id());
+    return this.productService.getProductById(this.id());
   });
 
   ngOnInit() {
