@@ -1,14 +1,14 @@
-<header>
+<app-list-header>
   <app-search-input (search)="onSearch($event)" placeholder="Search for products ..."/>
   <app-select [options]="categories" (optionSelected)="onCategorySelected($event)"/>
-</header>
+</app-list-header>
 
 @if(products.length > 0){
-  <ul id="products">
+  <app-list id="products">
     @for (product of products; track product.id) {
       <li><app-card [id]="product.id" [title]="product.title" [miniDescription]="product.miniDescription" [price]="product.price" [imageUrl]="product.imageUrl"></app-card></li>
     }
-  </ul>
+  </app-list>
 } @else {
-  <h4>No products found.</h4>
+  <app-list-empty/>
 }
