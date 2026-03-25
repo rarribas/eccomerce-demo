@@ -1,4 +1,4 @@
-import { Component, signal, output, input } from '@angular/core';
+import { Component, signal, output, input, effect } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CategoryId } from '../../../features/products/products.model';
 @Component({
@@ -13,6 +13,13 @@ export class Select {
   initialSelectedOptionId = input<CategoryId | ''>('');
   selectedOptionId = signal<CategoryId | ''>(this.initialSelectedOptionId());
   optionSelected = output<CategoryId | ''>();
+
+  constructor() {
+    effect(() => {
+      this.selectedOptionId.set(this.initialSelectedOptionId());
+    });
+  }
+
 
   onOptionChange(selectedId: CategoryId | '') {
     this.selectedOptionId.set(selectedId);
