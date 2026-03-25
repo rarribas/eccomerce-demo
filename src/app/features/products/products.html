@@ -1,7 +1,9 @@
 <app-list-header>
+  @if(searchTerm || selectedCategoryId){
+    <app-button (click)="clearFilters()">Clear Filters</app-button>
+  }
   <app-search-input [searchValue]="searchTerm" (search)="onSearch($event)" placeholder="Search for products ..."/>
   <app-select [selectedOptionId]="selectedCategoryId" [options]="categories" [optionType]="'category'" (optionSelected)="onCategorySelected($event)"/>
-  <button (click)="clearFilters()">Clear Filters</button>
 </app-list-header>
 
 @if(products.length > 0){

@@ -21,6 +21,5 @@ export class Product {
     if(!this.product()) {
       this.router.navigate(['/404']);
     }
-    console.log('Product ID:', this.product());
   }
 }

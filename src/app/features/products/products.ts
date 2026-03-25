@@ -7,9 +7,10 @@ import { ListHeader } from '../../shared/components/list/list-header/list-header
 import { ListEmpty } from "../../shared/components/list/list-empty/list-empty";
 import { ProductService } from './products.service';
 import { Product, Category, CategoryId } from './products.model';
+import { Button } from "../../shared/button/button";
 @Component({
   selector: 'app-products',
-  imports: [Card, SearchInput, Select, List, ListHeader, ListEmpty],
+  imports: [Card, SearchInput, Select, List, ListHeader, ListEmpty, Button],
   templateUrl: './products.html',
   styleUrl: './products.css',
 })

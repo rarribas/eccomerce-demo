@@ -1,0 +1,15 @@
+button {
+  min-height: 22px;
+  padding: 0 0.4rem;
+  box-sizing: border-box;
+  font-size: 0.8rem;
+  color: var(--color-primary);
+  border: 1px solid var(--purple-300);
+  background-color: var(--purple-200);
+  cursor: pointer;
+  border-radius: 2px;
+}
+
+button:hover{
+  background-color: var(--purple-300);
+}
