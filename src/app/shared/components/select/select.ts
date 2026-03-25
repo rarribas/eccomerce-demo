@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, input } from '@angular/core';
+import { Component, signal, output, input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CategoryId } from '../../../features/products/products.model';
 @Component({
@@ -8,13 +8,14 @@ import { CategoryId } from '../../../features/products/products.model';
   styleUrl: './select.css',
 })
 export class Select {
-  @Output() optionSelected = new EventEmitter<CategoryId>();
-  @Input({required: true}) optionType: string = '';
-  @Input({required: true}) options: { id: string; label: string }[] = [];
-  @Input() selectedOptionId: CategoryId | '' = '';
+  optionType = input.required<string>();
+  options = input.required<{ id: string; label: string }[]>();
+  initialSelectedOptionId = input<CategoryId | ''>('');
+  selectedOptionId = signal<CategoryId | ''>(this.initialSelectedOptionId());
+  optionSelected = output<CategoryId | ''>();
 
-  onOptionChange(selectedId: CategoryId) {
-    this.selectedOptionId = selectedId;
-    this.optionSelected.emit(this.selectedOptionId);
+  onOptionChange(selectedId: CategoryId | '') {
+    this.selectedOptionId.set(selectedId);
+    this.optionSelected.emit(this.selectedOptionId());
   }
 }
