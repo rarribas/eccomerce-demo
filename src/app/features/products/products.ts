@@ -14,19 +14,45 @@ import { Product, Category, CategoryId } from './products.model';
   styleUrl: './products.css',
 })
 export class Products {
+  allProducts: Product[] = [];
   products: Product[] = [];
   categories: Category[] = [];
 
+  searchTerm: string = '';
+  selectedCategoryId: CategoryId | '' = '';
+
   constructor(private productService: ProductService) {
-    this.products = productService.getAllProducts();
+    this.allProducts = productService.getAllProducts();
+    this.products = this.allProducts;
     this.categories = productService.getAllCategories();
   }
 
   onSearch(searchTerm: string) {
-    this.products = this.productService.filterProductsByName(searchTerm);
+    this.searchTerm = searchTerm;
+    this.applyFilters();
   }
 
   onCategorySelected(categoryId: CategoryId | '') {
-    this.products = categoryId ? this.productService.filterProductsByCategory(categoryId) : this.products;
+    this.selectedCategoryId = categoryId;
+    this.applyFilters();
+  }
+
+  applyFilters() {
+    let filtered = this.allProducts;
+    if(this.selectedCategoryId){
+      filtered = this.productService.filterProductsByCategory(this.selectedCategoryId, filtered);
+    }
+
+    if(this.searchTerm){
+      filtered = this.productService.filterProductsByName(this.searchTerm, filtered);
+    }
+
+    this.products = filtered;
+  }
+
+  clearFilters() {
+    this.searchTerm = '';
+    this.selectedCategoryId = '';
+    this.products = this.allProducts;
   }
 }

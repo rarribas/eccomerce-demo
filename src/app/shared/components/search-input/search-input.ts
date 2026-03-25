@@ -8,7 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
   styleUrl: './search-input.css',
 })
 export class SearchInput {
-  searchValue = '';
+  @Input() searchValue = '';
   @Output() search = new EventEmitter<string>();
   @Input() placeholder = 'Search...';
 

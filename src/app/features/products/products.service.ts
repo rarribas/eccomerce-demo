@@ -110,15 +110,15 @@ export class ProductService {
     return this.products.find((product) => product.id === id);
   }
   
-  filterProductsByName(query: string): Product[] {
+  filterProductsByName(query: string, products: Product[]): Product[] {
     if (!query.trim()) {
-      return this.products;
+      return products;
     }
     const lowerQuery = query.toLowerCase();
-    return this.products.filter((product) => product.title.toLowerCase().includes(lowerQuery));
+    return products.filter((product) => product.title.toLowerCase().includes(lowerQuery));
   }
 
-  filterProductsByCategory(categoryId: string): Product[] {
-    return this.products.filter((product) => product.categoryId === categoryId);
+  filterProductsByCategory(categoryId: string, products: Product[]): Product[] {
+    return products.filter((product) => product.categoryId === categoryId);
   }
 }

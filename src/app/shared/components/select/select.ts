@@ -11,11 +11,10 @@ export class Select {
   @Output() optionSelected = new EventEmitter<CategoryId>();
   @Input({required: true}) optionType: string = '';
   @Input({required: true}) options: { id: string; label: string }[] = [];
-  selectedOptionId: CategoryId | '' = '';
+  @Input() selectedOptionId: CategoryId | '' = '';
 
   onOptionChange(selectedId: CategoryId) {
     this.selectedOptionId = selectedId;
     this.optionSelected.emit(this.selectedOptionId);
-    console.log('Selected option ID:', this.selectedOptionId);
   }
 }
