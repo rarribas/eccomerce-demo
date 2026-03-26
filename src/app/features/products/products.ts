@@ -1,5 +1,6 @@
 import { Component, signal, inject } from '@angular/core';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { Card } from '../../shared/components/card/card';
 import { SearchInput } from '../../shared/components/search-input/search-input';
 import { Select } from '../../shared/components/select/select';
@@ -26,12 +27,14 @@ export class Products {
   selectedCategoryId: CategoryId | '' = '';
 
   private router = inject(Router);
+  private subscription?: Subscription;
+
   constructor(private productService: ProductService) {
     this.categories = productService.getAllCategories();
   }
 
   ngOnInit() {
-    this.productService.getAllProducts().subscribe({
+    this.subscription = this.productService.getAllProducts().subscribe({
       next: (products) => {
         this.allProducts = products;
         this.products = products;
@@ -45,6 +48,9 @@ export class Products {
     });
   }
 
+  ngOnDestroy() {
+    this.subscription?.unsubscribe();
+  }
   onSearch(searchTerm: string) {
     this.searchTerm = searchTerm;
     this.applyFilters();

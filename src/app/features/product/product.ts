@@ -2,6 +2,7 @@ import { Component, input, inject, signal, computed } from '@angular/core';
 import { Router } from '@angular/router';
 import { ProductService } from '../products/products.service';
 import { Product as ProductI } from '../products/products.model';
+import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-product',
   imports: [],
@@ -15,9 +16,10 @@ export class Product {
 
   private router = inject(Router);
   private productService = inject(ProductService);
+  private subscription?: Subscription;
   
   ngOnInit() {
-    this.productService.getProductById(this.id()).subscribe({
+    this.subscription = this.productService.getProductById(this.id()).subscribe({
       next: (product) => {
         this.product.set(product);
         this.isLoading.set(false);
@@ -29,4 +31,7 @@ export class Product {
       }
     });
   }
+
+  ngOnDestroy() {
+    this.subscription?.unsubscribe();}
 }
