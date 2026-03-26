@@ -7,5 +7,5 @@ export const routes: Routes = [
   { path: 'products/:id', component: Product },
   { path: '404', component: NotFound },
   { path: '', redirectTo: '/products', pathMatch: 'full' },
-  // { path: '**', redirectTo: '/404' }
+  { path: '**', redirectTo: '/404' }
 ];

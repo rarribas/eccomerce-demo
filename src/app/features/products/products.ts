@@ -1,16 +1,18 @@
-import { Component, NgModule } from '@angular/core';
+import { Component, signal, inject } from '@angular/core';
+import { Router } from '@angular/router';
 import { Card } from '../../shared/components/card/card';
 import { SearchInput } from '../../shared/components/search-input/search-input';
-import { Select } from "../../shared/components/select/select";
+import { Select } from '../../shared/components/select/select';
 import { List } from '../../shared/components/list/list';
 import { ListHeader } from '../../shared/components/list/list-header/list-header';
-import { ListEmpty } from "../../shared/components/list/list-empty/list-empty";
+import { ListEmpty } from '../../shared/components/list/list-empty/list-empty';
 import { ProductService } from './products.service';
 import { Product, Category, CategoryId } from './products.model';
-import { Button } from "../../shared/button/button";
+import { Button } from '../../shared/components/button/button';
+import { Loading } from '../loading/loading';
 @Component({
   selector: 'app-products',
-  imports: [Card, SearchInput, Select, List, ListHeader, ListEmpty, Button],
+  imports: [Card, SearchInput, Select, List, ListHeader, ListEmpty, Button, Loading],
   templateUrl: './products.html',
   styleUrl: './products.css',
 })
@@ -18,14 +20,29 @@ export class Products {
   allProducts: Product[] = [];
   products: Product[] = [];
   categories: Category[] = [];
+  isLoading = signal(true);
 
   searchTerm: string = '';
   selectedCategoryId: CategoryId | '' = '';
 
+  private router = inject(Router);
   constructor(private productService: ProductService) {
-    this.allProducts = productService.getAllProducts();
-    this.products = this.allProducts;
     this.categories = productService.getAllCategories();
+  }
+
+  ngOnInit() {
+    this.productService.getAllProducts().subscribe({
+      next: (products) => {
+        this.allProducts = products;
+        this.products = products;
+        this.isLoading.set(false);
+      },
+      error: (err) => {
+        console.error('Error loading product:', err);
+        this.isLoading.set(false);
+        this.router.navigate(['/404']);
+      }
+    });
   }
 
   onSearch(searchTerm: string) {
@@ -40,11 +57,11 @@ export class Products {
 
   applyFilters() {
     let filtered = this.allProducts;
-    if(this.selectedCategoryId){
+    if (this.selectedCategoryId) {
       filtered = this.productService.filterProductsByCategory(this.selectedCategoryId, filtered);
     }
 
-    if(this.searchTerm){
+    if (this.searchTerm) {
       filtered = this.productService.filterProductsByName(this.searchTerm, filtered);
     }
 

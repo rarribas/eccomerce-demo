@@ -1,17 +1,21 @@
-<app-list-header>
-  @if(searchTerm || selectedCategoryId){
-    <app-button (click)="clearFilters()">Clear Filters</app-button>
-  }
-  <app-search-input [initialSearchValue]="searchTerm" (search)="onSearch($event)" placeholder="Search for products ..."/>
-  <app-select [initialSelectedOptionId]="selectedCategoryId" [options]="categories" [optionType]="'category'" (optionSelected)="onCategorySelected($event)"/>
-</app-list-header>
-
-@if(products.length > 0){
-  <app-list id="products">
-    @for (product of products; track product.id) {
-      <li><app-card [id]="product.id" [title]="product.title" [miniDescription]="product.miniDescription" [price]="product.price" [imageUrl]="product.imageUrl"></app-card></li>
-    }
-  </app-list>
+@if(isLoading()){
+  <app-loading/>
 } @else {
-  <app-list-empty/>
+  <app-list-header>
+    @if(searchTerm || selectedCategoryId){
+      <app-button (click)="clearFilters()">Clear Filters</app-button>
+    }
+    <app-search-input [initialSearchValue]="searchTerm" (search)="onSearch($event)" placeholder="Search for products ..."/>
+    <app-select [initialSelectedOptionId]="selectedCategoryId" [options]="categories" [optionType]="'category'" (optionSelected)="onCategorySelected($event)"/>
+  </app-list-header>
+
+  @if(products.length > 0){
+    <app-list id="products">
+      @for (product of products; track product.id) {
+        <li><app-card [id]="product.id" [title]="product.title" [miniDescription]="product.miniDescription" [price]="product.price" [imageUrl]="product.imageUrl"></app-card></li>
+      }
+    </app-list>
+  } @else {
+    <app-list-empty/>
+  }
 }
