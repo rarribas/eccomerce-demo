@@ -1,4 +1,4 @@
-import { Component, signal, inject } from '@angular/core';
+import { Component, signal, inject, computed } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Card } from '../../shared/components/card/card';
@@ -18,13 +18,11 @@ import { Loading } from '../loading/loading';
   styleUrl: './products.css',
 })
 export class Products {
-  allProducts: Product[] = [];
-  products: Product[] = [];
   categories: Category[] = [];
   isLoading = signal(true);
-
-  searchTerm: string = '';
-  selectedCategoryId: CategoryId | '' = '';
+  allProducts = signal<Product[]>([]);
+  searchTerm = signal('');
+  selectedCategoryId = signal<CategoryId | ''>('');
 
   private router = inject(Router);
   private subscription?: Subscription;
@@ -36,8 +34,7 @@ export class Products {
   ngOnInit() {
     this.subscription = this.productService.getAllProducts().subscribe({
       next: (products) => {
-        this.allProducts = products;
-        this.products = products;
+        this.allProducts.set(products);
         this.isLoading.set(false);
       },
       error: (err) => {
@@ -52,31 +49,30 @@ export class Products {
     this.subscription?.unsubscribe();
   }
   onSearch(searchTerm: string) {
-    this.searchTerm = searchTerm;
-    this.applyFilters();
+    this.searchTerm.set(searchTerm);
   }
 
   onCategorySelected(categoryId: CategoryId | '') {
-    this.selectedCategoryId = categoryId;
-    this.applyFilters();
+    this.selectedCategoryId.set(categoryId);
   }
 
-  applyFilters() {
-    let filtered = this.allProducts;
-    if (this.selectedCategoryId) {
-      filtered = this.productService.filterProductsByCategory(this.selectedCategoryId, filtered);
+  // When signals of products, searchTerm or selectedCategoryId change, 
+  // we want to re-apply the filters to get the new list of products to display
+  filteredProducts = computed(() => {
+    let products  = this.allProducts();
+    if (this.selectedCategoryId()) {
+      products = this.productService.filterProductsByCategory(this.selectedCategoryId(), products);
     }
 
-    if (this.searchTerm) {
-      filtered = this.productService.filterProductsByName(this.searchTerm, filtered);
+    if (this.searchTerm()) {
+      products = this.productService.filterProductsByName(this.searchTerm(), products);
     }
 
-    this.products = filtered;
-  }
+    return products;
+  });
 
   clearFilters() {
-    this.searchTerm = '';
-    this.selectedCategoryId = '';
-    this.products = this.allProducts;
+    this.searchTerm.set('');
+    this.selectedCategoryId.set('');
   }
 }

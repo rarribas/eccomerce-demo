@@ -4,7 +4,7 @@
   </a>
   <div class="card-body">
     <h4><a [routerLink]="productUrl()">{{title()}}</a></h4>
-    <p>€ {{price().toFixed(2)}}</p>
+    <p>{{price().toFixed(2) | currency:'EUR'}}</p>
     <p class="desc">{{miniDescription()}}</p>
   </div>
 </div>
