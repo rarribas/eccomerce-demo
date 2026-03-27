@@ -1,15 +1,8 @@
-import { Component, signal, inject, computed } from '@angular/core';
+import { Component, signal, inject, computed, DestroyRef } from '@angular/core';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
-import { Card } from '../../shared/components/card/card';
-import { SearchInput } from '../../shared/components/search-input/search-input';
-import { Select } from '../../shared/components/select/select';
-import { List } from '../../shared/components/list/list';
-import { ListHeader } from '../../shared/components/list/list-header/list-header';
-import { ListEmpty } from '../../shared/components/list/list-empty/list-empty';
-import { ProductService } from './products.service';
-import { Product, Category, CategoryId } from './products.model';
-import { Button } from '../../shared/components/button/button';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Card, SearchInput, Select, List, ListHeader, ListEmpty, Button } from '@shared/components';
+import { ProductService, Product, Category, CategoryId } from '@features/products';
 import { Loading } from '../loading/loading';
 @Component({
   selector: 'app-products',
@@ -24,30 +17,31 @@ export class Products {
   searchTerm = signal('');
   selectedCategoryId = signal<CategoryId | ''>('');
 
-  private router = inject(Router);
-  private subscription?: Subscription;
+  private readonly router = inject(Router);
+  private readonly productService = inject(ProductService);
+  private readonly destroyRef = inject(DestroyRef);
 
-  constructor(private productService: ProductService) {
-    this.categories = productService.getAllCategories();
+  constructor() {
+    this.categories = this.productService.getAllCategories();
   }
 
   ngOnInit() {
-    this.subscription = this.productService.getAllProducts().subscribe({
-      next: (products) => {
-        this.allProducts.set(products);
-        this.isLoading.set(false);
-      },
-      error: (err) => {
-        console.error('Error loading product:', err);
-        this.isLoading.set(false);
-        this.router.navigate(['/404']);
-      }
-    });
+    this.productService
+      .getAllProducts()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (products) => {
+          this.allProducts.set(products);
+          this.isLoading.set(false);
+        },
+        error: (err) => {
+          console.error('Error loading product:', err);
+          this.isLoading.set(false);
+          this.router.navigate(['/404']);
+        },
+      });
   }
 
-  ngOnDestroy() {
-    this.subscription?.unsubscribe();
-  }
   onSearch(searchTerm: string) {
     this.searchTerm.set(searchTerm);
   }
@@ -56,10 +50,8 @@ export class Products {
     this.selectedCategoryId.set(categoryId);
   }
 
-  // When signals of products, searchTerm or selectedCategoryId change, 
-  // we want to re-apply the filters to get the new list of products to display
   filteredProducts = computed(() => {
-    let products  = this.allProducts();
+    let products = this.allProducts();
     if (this.selectedCategoryId()) {
       products = this.productService.filterProductsByCategory(this.selectedCategoryId(), products);
     }

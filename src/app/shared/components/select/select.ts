@@ -1,6 +1,6 @@
 import { Component, signal, output, input, effect } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { CategoryId } from '../../../features/products/products.model';
+import { CategoryId } from '@features/products';
 @Component({
   selector: 'app-select',
   imports: [FormsModule],
@@ -19,7 +19,6 @@ export class Select {
       this.selectedOptionId.set(this.initialSelectedOptionId());
     });
   }
-
 
   onOptionChange(selectedId: CategoryId | '') {
     this.selectedOptionId.set(selectedId);

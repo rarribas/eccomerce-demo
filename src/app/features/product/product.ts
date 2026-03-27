@@ -1,37 +1,36 @@
-import { Component, input, inject, signal, computed } from '@angular/core';
+import { Component, input, inject, signal, DestroyRef } from '@angular/core';
 import { Router } from '@angular/router';
-import { ProductService } from '../products/products.service';
-import { Product as ProductI } from '../products/products.model';
-import { Subscription } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ProductService, Product as ProductModel } from '@features/products';
 @Component({
   selector: 'app-product',
   imports: [],
   templateUrl: './product.html',
   styleUrl: './product.css',
 })
-export class Product {
+export class ProductComponent {
   id = input.required<string>();
-  product = signal<ProductI | null>(null);
+  product = signal<ProductModel | null>(null);
   isLoading = signal(true);
 
-  private router = inject(Router);
-  private productService = inject(ProductService);
-  private subscription?: Subscription;
-  
-  ngOnInit() {
-    this.subscription = this.productService.getProductById(this.id()).subscribe({
-      next: (product) => {
-        this.product.set(product);
-        this.isLoading.set(false);
-      },
-      error: (err) => {
-        console.error('Error loading product:', err);
-        this.isLoading.set(false);
-        this.router.navigate(['/404']);
-      }
-    });
-  }
+  private readonly router = inject(Router);
+  private readonly productService = inject(ProductService);
+  private readonly destroyRef = inject(DestroyRef);
 
-  ngOnDestroy() {
-    this.subscription?.unsubscribe();}
+  ngOnInit() {
+    this.productService
+      .getProductById(this.id())
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (product) => {
+          this.product.set(product);
+          this.isLoading.set(false);
+        },
+        error: (err) => {
+          console.error('Error loading product:', err);
+          this.isLoading.set(false);
+          this.router.navigate(['/404']);
+        },
+      });
+  }
 }
